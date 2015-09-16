@@ -52,15 +52,15 @@ function safe_rm() {
 
 ## completed and clean up
 function completed_clean_up() {
-  safe_rm "$LOCK_file";
-  safe_rm "$CONFIGURATION_file";
+  [[ -f "$LOCK_file" ]] && safe_rm "$LOCK_file";
+  [[ -f "$PID_file" ]] && safe_rm "$PID_file";
   return 0;
 }
 
 ## Killed and clean up
 function killed_clean_up() {
-  safe_rm "$LOCK_file";
-  safe_rm "$CONFIGURATION_file";
+  [[ -f "$LOCK_file" ]] && safe_rm "$LOCK_file";
+  [[ -f "$PID_file" ]] && safe_rm "$PID_file";
   return 0;
 }
 
