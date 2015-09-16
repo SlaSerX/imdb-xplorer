@@ -45,7 +45,7 @@ function safe_rm() {
   if [[ "$file_size" -ge "$max_file_size" ]]; then
     v_debug "File size is too large" "safe rm failed, something wrong" "1"
   else
-    rm -iv "$file_name"
+    rm -v "$file_name"
   fi
   return;
 }
