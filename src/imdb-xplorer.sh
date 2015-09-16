@@ -43,26 +43,30 @@ function safe_rm() {
   max_file_size=2048000
   file_size=$(wc -c < "$file_name")
   if [[ "$file_size" -ge "$max_file_size" ]]; then
-    echo "Hello"
+    v_debug "File size is too large" "safe rm failed, something wrong" "1"
   else
-    echo "Bye"
+    rm -iv "$file_name"
   fi
   return;
 }
 
 ## completed and clean up
 function completed_clean_up() {
-  true;
+  safe_rm "$LOCK_file";
+  safe_rm "$CONFIGURATION_file";
+  return 0;
 }
 
 ## Killed and clean up
 function killed_clean_up() {
-  true;
+  safe_rm "$LOCK_file";
+  safe_rm "$CONFIGURATION_file";
+  return 0;
 }
 
 ## trap signals
-##trap completed_clean_up
-##trap killed_clean_up
+trap exit completed_clean_up
+trap 1 2 9 15 17 killed_clean_up
 
 ## Colors
 [[ -t 1 ]] && ncolors=$(tput colors) # set the number of colors tmp/05.sh
@@ -215,7 +219,7 @@ E/.imdb-xplorer/tmp/title_"$search_string"_$search_count
 0-9]* photos" | awk -F/ '{printf $1}' | tr -d "<>" || true;
     printf "\nBio:\t\t"
     cat $HOME/.imdb-xplorer/tmp/title_"$search_string"_$search_count | grep og:\
-description | awk -F\" '{printf $4}'
+description | awk -F\" '{printf $4}' || true;
     echo ""
     printf "\nProfile URL: "
     printf "${blue}"
