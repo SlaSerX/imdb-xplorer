@@ -65,8 +65,8 @@ function killed_clean_up() {
 }
 
 ## trap signals
-trap exit completed_clean_up
-trap 1 2 9 15 17 killed_clean_up
+trap completed_clean_up exit
+trap killed_clean_up 1 2 9 15 17
 
 ## Colors
 [[ -t 1 ]] && ncolors=$(tput colors) # set the number of colors tmp/05.sh
