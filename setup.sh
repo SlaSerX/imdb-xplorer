@@ -42,14 +42,14 @@ P_SHELL=${SHELL##*/} # Parameter Expansion
 ## Debug mode
 function debug() {
   [[ -z "$DEBUG" ]] && return;
-  printf "Debug: "$1"\n";
+  printf "Debug: %s\n" "$1";
   exit 1;
 }
 
 ## verbose debug mode
 function v_debug() {
   [[ -z "$V_DEBUG" ]] && debug "$1" && return;
-  printf "Verbose: "$1" ---> "$2"\n";
+  printf "Verbose: %s ---> %s\n" "$1" "$2";
   exit 1;
 }
 
@@ -69,7 +69,7 @@ check failed"
 ## ## Check if stdout is terminal or not
 [[ -t 1 ]] && ncolors=$(tput colors) # set the number of colors tmp/05.sh
 [[ -z "ncolors" ]] && v_debug "Colors not supported" "tput color is failed"
-if test -n "$ncolors" && test $ncolors -ge 8; then
+if test -n "$ncolors" && test "$ncolors" -ge 8; then
   bold="$(tput bold)"
   underline="$(tput smul)"
   standout="$(tput smso)"
@@ -114,6 +114,12 @@ log file" "Installation of imdb-xplorer.log file failed"
 install -Dm644 etc/imdb-xplorer.cfg $HOME/.imdb-xplorer/etc/imdb-xplorer.cfg
 [[ ! -f $HOME/.imdb-xplorer/etc/imdb-xplorer.cfg ]] && v_debug "Unable to add c\
 onfiguration file" "Installation of imdb-xplorer.cfg failed"
+[[ ! -d $HOME/.imdb-xplorer/var ]] && mkdir $HOME/.imdb-xplorer/var
+[[ ! -d $HOME/.imdb-xplorer/var/run ]] && mkdir $HOME/.imdb-xplorer/var/run
+[[ ! -d $HOME/.imdb-xplorer/var/lock ]] && mkdir $HOME/.imdb-xplorer/var/lock
+[[ ! -d $HOME/.imdb-xplorer/tmp ]] && mkdir $HOME/.imdb-xplorer/tmp
+[[ ! -d $HOME/.imdb-xplorer/var ]] && v_debug "Unable to create directory" "Ins\
+tallation failed"
 printf "\n$PROGRAM_NAME is successfully installed in $HOME/.imdb-xplorer/bin\n"
 [[ ! -f `which $SCRIPT_NAME` ]] && [[ -f $F_RC ]] && echo "export PATH=$HOME/.i\
 mdb-xplorer/bin:\$PATH" >> $F_RC
